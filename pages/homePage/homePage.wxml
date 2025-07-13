@@ -1,0 +1,49 @@
+<!--pages/homePage/homePage.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">我的课程</text>
+  </view>
+  
+  <view class="content">
+    <view class="user-info" wx:if="{{userInfo}}">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" bindtap="updateAvatar"></image>
+      <text class="username">{{userInfo.nickName || '用户'}}</text>
+    </view>
+    
+    <view class="welcome-text" wx:else>
+      <text>欢迎使用课程管理系统</text>
+    </view>
+    
+    <view class="course-section">
+      <view class="course-header">
+        <text class="section-title">我的课程</text>
+        <text class="course-count">{{courseList.length || 0}} 门课程</text>
+      </view>
+      
+      <view class="course-list" wx:if="{{courseList && courseList.length > 0}}">
+        <view class="course-item" wx:for="{{courseList}}" wx:key="id" bindtap="goToCourse" data-course="{{item}}">
+          <view class="course-info">
+            <text class="course-name">{{item.name}}</text>
+            <text class="course-desc">{{item.description}}</text>
+            <text class="course-progress">进度: {{item.progress || 0}}%</text>
+          </view>
+          <view class="course-status">
+            <text class="status-text {{item.status === 'active' ? 'active' : 'inactive'}}">
+              {{item.status === 'active' ? '进行中' : '已完成'}}
+            </text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="empty-state" wx:else>
+        <text class="empty-text">暂无课程</text>
+        <text class="empty-desc">您还没有加入任何课程</text>
+      </view>
+    </view>
+    
+    <view class="button-group">
+      <button class="btn btn-primary" wx:if="{{!userInfo}}" bindtap="goToLogin">登录</button>
+      <button class="btn btn-secondary" wx:if="{{userInfo}}" bindtap="handleLogout">注销</button>
+    </view>
+  </view>
+</view>
