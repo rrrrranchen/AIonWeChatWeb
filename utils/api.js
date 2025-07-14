@@ -9,9 +9,9 @@ export const API_ENDPOINTS = {
   LOGOUT: `${API_BASE_URL}/logout`,
   
   // 用户相关
-  HOME: `${API_BASE_URL}/home`,
-  UPDATE_PROFILE: `${API_BASE_URL}/home/update`,
-  UPDATE_AVATAR: `${API_BASE_URL}/home/avatar`,
+  HOME: `${API_BASE_URL}/profile`,
+  UPDATE_PROFILE: `${API_BASE_URL}/profile/update`,
+  UPDATE_AVATAR: `${API_BASE_URL}/profile/update_avatar`,
   
   // 课程相关
   COURSES: `${API_BASE_URL}/courseclasses`,

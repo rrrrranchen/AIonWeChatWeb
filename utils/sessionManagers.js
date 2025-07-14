@@ -6,6 +6,7 @@ export default {
   saveSession(sessionId) {
     try {
       wx.setStorageSync(SESSION_KEY, sessionId)
+      console.log("sessionId:", sessionId) // 修复这里
       return true
     } catch (e) {
       console.error('保存 Session 失败:', e)
@@ -37,6 +38,7 @@ export default {
   // 封装带 Session 的请求
   requestWithSession(options) {
     const sessionId = this.getSession()
+    console.log('带session发送请求：', sessionId) // 修复这里
     const header = {
       ...(options.header || {}),
       'Cookie': `session=${sessionId}`
@@ -47,7 +49,6 @@ export default {
         ...options,
         header,
         success: (res) => {
-          // 检查是否需要更新 Session
           if (res.header['Set-Cookie']) {
             const newSession = this.extractSessionId(res.header['Set-Cookie'])
             if (newSession) this.saveSession(newSession)

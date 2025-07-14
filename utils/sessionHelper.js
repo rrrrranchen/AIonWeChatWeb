@@ -16,9 +16,9 @@ export function handleSessionFromResponse(res, store = null) {
       sessionManager.saveSession(newSession)
       
       // 如果提供了store，更新store中的sessionId
-      if (store && store.state) {
-        store.state.sessionId = newSession
-      }
+      // if (store && store.state) {
+      //   store.state.sessionId = newSession
+      // }
       
       console.log('Session已更新:', newSession)
       return newSession

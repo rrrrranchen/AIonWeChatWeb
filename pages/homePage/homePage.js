@@ -2,6 +2,7 @@
 import { navigateTo, redirectTo, pages } from '../../utils/router.js'
 import { API_ENDPOINTS, getHeaders, handleApiError } from '../../utils/api.js'
 import { handleSessionFromResponse } from '../../utils/sessionHelper.js'
+import sessionManager from '../../utils/sessionManagers.js'
 
 const app = getApp()
 
@@ -28,7 +29,7 @@ Page({
   // 加载课程列表
   async loadCourseList() {
     try {
-      const res = await wx.request({
+      const res = await sessionManager.requestWithSession({
         url: API_ENDPOINTS.COURSES,
         method: 'GET',
         header: getHeaders(),
