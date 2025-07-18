@@ -1,0 +1,6 @@
+{
+    "usingComponents": {"tab-bar": "/components/tabBar/tabBar",
+        "header": "/components/header/header"},
+    "navigationBarTitleText": "AI学习助手"
+  }
+  

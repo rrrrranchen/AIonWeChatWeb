@@ -1,0 +1,4 @@
+<!-- components/globalHeader/globalHeader.wxml -->
+<view class="header">
+  <text class="header-text">教备通</text>
+</view>

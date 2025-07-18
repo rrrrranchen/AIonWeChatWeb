@@ -1,7 +1,11 @@
 {
     "pages": [
         "pages/homePage/homePage",
-        "pages/login/login"
+        "pages/login/login",
+        "pages/courseDetail/courseDetail",
+        "pages/aiAssistant/aiAssistant",
+        "components/tabBar/tabBar",
+        "components/header/header"
     ],
     "window": {
         "navigationBarTextStyle": "black",
@@ -20,5 +24,9 @@
     },
     "componentFramework": "glass-easel",
     "sitemapLocation": "sitemap.json",
-    "lazyCodeLoading": "requiredComponents"
+    "lazyCodeLoading": "requiredComponents",
+    "usingComponents": {
+        "tab-bar": "/components/tabBar/tabBar",
+        "header": "/components/header/header"
+    }
 }

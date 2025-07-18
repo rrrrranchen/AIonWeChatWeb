@@ -1,0 +1,73 @@
+<!-- pages/courseDetail/courseDetail.wxml -->
+<header />
+<view class="nav-container" style="margin-top: 157rpx;">
+  <view class="nav-back" bindtap="navigateBack">
+    <image src="/images/back.png" class="nav-back-icon"></image>
+    <text class="nav-back-text">返回</text>
+  </view>
+  <text class="nav-title">{{courseClassInfo.name || '课程班详情'}}</text>
+</view>
+
+<view class="page-container" style="margin-top: 157rpx;">
+  <!-- 课程班信息卡片 -->
+  <view class="class-info-card">
+    <text class="class-name">{{courseClassInfo.name}}</text>
+    <text class="class-desc">{{courseClassInfo.description || '暂无课程班描述'}}</text>
+    
+    <view class="class-teachers">
+      <text class="teacher-label">教师</text>
+      <view class="teacher-list">
+        <block wx:for="{{courseClassInfo.teachers}}" wx:key="id">
+          <view class="teacher-item">
+            <image src="{{item.avatar || '/images/default-avatar.png'}}" class="teacher-avatar"></image>
+            <text class="teacher-name">{{item.username}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <image src="/images/loading.gif" class="loading-icon" mode="aspectFit"></image>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 错误状态 -->
+  <view wx:if="{{error}}" class="error-container">
+    <image src="/images/error.png" class="error-icon"></image>
+    <text class="error-text">{{error}}</text>
+    <button bindtap="onRetry" class="retry-button" hover-class="button-hover">重新加载</button>
+  </view>
+
+  <!-- 内容区域 -->
+  <view wx:if="{{!loading && !error}}" class="content-container">
+    <!-- 课程列表标题 -->
+    <view class="section-title">
+      <text>课程列表</text>
+    </view>
+    
+    <!-- 课程列表 - 使用scroll-view包裹 -->
+    <scroll-view scroll-y class="courses-scroll">
+      <view class="courses-list">
+        <block wx:for="{{courses}}" wx:key="id">
+          <view class="course-item" bindtap="navigateToCourse" data-id="{{item.id}}">
+            <view class="course-header">
+              <text class="course-title">{{item.name}}</text>
+            </view>
+            <text class="course-desc">{{item.description || '暂无课程描述'}}</text>
+            <view class="course-meta">
+              <text class="meta-item">公开问题: {{item.has_public_questions ? '有' : '无'}}</text>
+            </view>
+          </view>
+        </block>
+        
+        <view wx:if="{{!courses || courses.length === 0}}" class="empty-tip">
+          <image src="/images/empty.png" class="empty-icon"></image>
+          <text class="empty-text">暂无课程数据</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+<tab-bar currentTab="{{currentTab}}" bind:switch="switchTab" />

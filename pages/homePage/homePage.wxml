@@ -1,49 +1,128 @@
 <!--pages/homePage/homePage.wxml-->
-<view class="container">
-  <view class="header">
-    <text class="title">我的课程</text>
-  </view>
-  
-  <view class="content">
-    <view class="user-info" wx:if="{{userInfo}}">
-      <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" bindtap="updateAvatar"></image>
-      <text class="username">{{userInfo.nickName || '用户'}}</text>
-    </view>
-    
-    <view class="welcome-text" wx:else>
-      <text>欢迎使用课程管理系统</text>
-    </view>
-    
-    <view class="course-section">
-      <view class="course-header">
-        <text class="section-title">我的课程</text>
-        <text class="course-count">{{courseList.length || 0}} 门课程</text>
-      </view>
-      
-      <view class="course-list" wx:if="{{courseList && courseList.length > 0}}">
-        <view class="course-item" wx:for="{{courseList}}" wx:key="id" bindtap="goToCourse" data-course="{{item}}">
-          <view class="course-info">
-            <text class="course-name">{{item.name}}</text>
-            <text class="course-desc">{{item.description}}</text>
-            <text class="course-progress">进度: {{item.progress || 0}}%</text>
+<header />
+<view class="container" style="margin-top: 157rpx;">
+  <!-- 内容区 -->
+  <swiper 
+    current="{{currentTab}}" 
+    duration="300" 
+    bindchange="onSwiperChange"
+    class="swiper-container"
+  >
+    <!-- 首页内容 -->
+    <swiper-item>
+      <scroll-view scroll-y class="tab-content">
+        <!-- 替换为图片 -->
+        <image 
+          src="/images/carousel1.png" 
+          mode="widthFix" 
+          class="header-image"
+        ></image>
+        
+        <view class="recommend-section" wx:if="{{recommendedCourses.length > 0}}">
+          <view class="section-header">
+            <text class="section-title">推荐课程</text>
           </view>
-          <view class="course-status">
-            <text class="status-text {{item.status === 'active' ? 'active' : 'inactive'}}">
-              {{item.status === 'active' ? '进行中' : '已完成'}}
-            </text>
+          <view class="recommend-list">
+            <view 
+              class="recommend-item" 
+              wx:for="{{recommendedCourses}}" 
+              wx:key="id"
+              bindtap="goToCourseDetail"
+              data-course-id="{{item.id}}"
+            >
+              <view class="recommend-info">
+                <text class="recommend-name">{{item.name}}</text>
+                <text class="recommend-desc">{{item.description}}</text>
+                <text class="recommend-reason">{{item.reason}}</text>
+              </view>
+            </view>
           </view>
         </view>
-      </view>
-      
-      <view class="empty-state" wx:else>
-        <text class="empty-text">暂无课程</text>
-        <text class="empty-desc">您还没有加入任何课程</text>
-      </view>
-    </view>
-    
-    <view class="button-group">
-      <button class="btn btn-primary" wx:if="{{!userInfo}}" bindtap="goToLogin">登录</button>
-      <button class="btn btn-secondary" wx:if="{{userInfo}}" bindtap="handleLogout">注销</button>
-    </view>
+        
+        <!-- 登录按钮（未登录时显示） -->
+        <view class="button-group" wx:if="{{!userInfo}}">
+          <button class="btn btn-primary" bindtap="goToLogin">登录</button>
+        </view>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- 课程列表 -->
+    <swiper-item>
+      <scroll-view scroll-y class="tab-content">
+        <view class="course-section">
+          <view class="course-header">
+            <text class="section-title">我的课程</text>
+            <text class="course-count">{{courseList.length}}门课程</text>
+          </view>
+          
+          <view class="course-list">
+            <view 
+              class="course-item" 
+              wx:for="{{courseList}}" 
+              wx:key="id"
+              bindtap="goToCourseDetail"
+              data-course-id="{{item.id}}"
+            >
+              <view class="course-info">
+                <text class="course-name">{{item.name}}</text>
+                <text class="course-desc">{{item.description}}</text>
+                <text class="course-progress">进度: {{item.progress}}0%</text>
+              </view>
+              <view class="course-status">
+                <text class="status-text {{item.status}}">
+                  {{item.status === 'completed' ? '已完成' : '进行中'}}
+                </text>
+              </view>
+            </view>
+            
+            <view class="empty-state" wx:if="{{courseList.length === 0}}">
+              <text class="empty-text">暂无课程</text>
+              <text class="empty-desc">快去添加或加入课程吧</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- 我的页面 -->
+    <swiper-item>
+      <scroll-view scroll-y class="tab-content">
+        <view class="user-section" wx:if="{{userInfo}}">
+          <view class="user-card">
+            <image class="avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}"></image>
+            <view class="user-details">
+              <text class="name">{{userInfo.name}}</text>
+              <text class="username">@{{userInfo.username}}</text>
+              <text class="email">{{userInfo.email}}</text>
+            </view>
+          </view>
+          
+          <view class="action-list">
+            <view class="action-item">
+              <text>个人设置</text>
+              <image src="/images/arrow-right.png"></image>
+            </view>
+            <view class="action-item">
+              <text>学习记录</text>
+              <image src="/images/arrow-right.png"></image>
+            </view>
+            <view class="action-item" bindtap="handleLogout">
+              <text>退出登录</text>
+              <image src="/images/arrow-right.png"></image>
+            </view>
+          </view>
+        </view>
+        
+        <view class="button-group" wx:if="{{!userInfo}}">
+          <button class="btn btn-primary" bindtap="goToLogin">请先登录</button>
+        </view>
+      </scroll-view>
+    </swiper-item>
+  </swiper>
+  <!-- 顶部导航 -->
+  
+    <view class="ai-assistant-btn" bindtap="goToAIAssistant">
+      <text>?</text>
   </view>
 </view>
+<tab-bar currentTab="{{currentTab}}" bind:switch="switchTab" />

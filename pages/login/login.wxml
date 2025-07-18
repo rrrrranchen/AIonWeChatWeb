@@ -1,11 +1,11 @@
 <!--pages/login/login.wxml-->
+<header />
 <view class="container">
-  <view class="header">
-    <text class="title">用户登录</text>
-    <text class="subtitle">请输入您的账号信息</text>
-  </view>
+    <image src="/images/sys_logo.png" mode="aspectFit" class="logo"></image>
   
   <view class="form">
+    <text class="title">用户登录</text>
+    <text class="subtitle">请输入您的账号信息</text>
     <view class="input-group">
       <text class="label">用户名</text>
       <input 

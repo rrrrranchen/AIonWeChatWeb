@@ -1,0 +1,18 @@
+<!-- components/tabBar/tabBar.wxml -->
+<view class="tab-bar">
+  <view 
+    class="tab {{currentTab === 0 ? 'active' : ''}}" 
+    bindtap="switchTab" 
+    data-tab="0"
+  >首页</view>
+  <view 
+    class="tab {{currentTab === 1 ? 'active' : ''}}" 
+    bindtap="switchTab" 
+    data-tab="1"
+  >课程</view>
+  <view 
+    class="tab {{currentTab === 2 ? 'active' : ''}}" 
+    bindtap="switchTab" 
+    data-tab="2"
+  >我的</view>
+</view>

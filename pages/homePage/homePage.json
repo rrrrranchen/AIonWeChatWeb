@@ -1,4 +1,4 @@
 {
-    "usingComponents": {},
+    "usingComponents": {"header": "/components/header/header"},
     "navigationBarTitleText": "我的课程"
 }

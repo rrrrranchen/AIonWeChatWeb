@@ -1,0 +1,10 @@
+{
+    "usingComponents": { "tab-bar": "/components/tabBar/tabBar",
+        "header": "/components/header/header"},
+    "navigationBarTitleText": "课程详情",
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom",
+    "backgroundColor": "#764ba2",
+    "backgroundTextStyle": "light"
+  }
+  

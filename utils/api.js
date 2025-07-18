@@ -12,11 +12,16 @@ export const API_ENDPOINTS = {
   HOME: `${API_BASE_URL}/profile`,
   UPDATE_PROFILE: `${API_BASE_URL}/profile/update`,
   UPDATE_AVATAR: `${API_BASE_URL}/profile/update_avatar`,
-  
+  GET_AVATAR:(id)=>`${API_BASE_URL}/avatar/${id}`,
   // 课程相关
   COURSES: `${API_BASE_URL}/courseclasses`,
-  COURSE_DETAIL: (id) => `${API_BASE_URL}/courseclasses/${id}`,
-  COURSE_PROGRESS: (id) => `${API_BASE_URL}/courseclasses/${id}/progress`,
+  COURSE_CLASS_DETAIL: (id) => `${API_BASE_URL}/courseclasses/${id}`,
+  COURSE_CLASS_COURSES: (id) => `${API_BASE_URL}/courseclasses/${id}/courses`,
+  COURSE_CLASS_CONVERSATIONS: `${API_BASE_URL}/course_class_conversations`,
+  CONVERSATION_DETAIL: `${API_BASE_URL}/conversation_detail`,
+  CREATE_CONVERSATION: `${API_BASE_URL}/create_conversation`,
+  COURSE_CLASS_CHAT: `${API_BASE_URL}/course_class_chat`,
+  RECOMMEND_COURSES: `${API_BASE_URL}/courseclass/recommend_courseclasses`,
 }
 
 // API请求配置
@@ -30,6 +35,7 @@ export const getHeaders = (customHeaders = {}) => {
   return {
     'Content-Type': 'application/json',
     ...customHeaders
+    
   }
 }
 

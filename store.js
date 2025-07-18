@@ -7,7 +7,11 @@ const store = {
   state: {
     isLoggedIn: false,
     userInfo: null,
-    sessionId: ''
+    sessionId: '',
+    currentCourse: null,  // 当前查看的课程
+    courseChapters: [],   // 课程章节
+    learningReport: null, // 学习报告
+    classMembers: []      // 班级成员
   },
   
   // 初始化状态
@@ -120,6 +124,103 @@ const store = {
     } catch (error) {
       handleApiError(error, 'UPDATE_AVATAR')
       return false
+    }
+  },
+  // 获取课程详情
+  async getCourseDetail(courseId) {
+    try {
+      const res = await sessionManager.requestWithSession({
+        url: `${API_ENDPOINTS.COURSES}/${courseId}`,
+        method: 'GET'
+      })
+      
+      if (res.statusCode === 200) {
+        this.state.currentCourse = res.data
+        return res.data
+      }
+      return null
+    } catch (error) {
+      handleApiError(error, 'GET_COURSE_DETAIL')
+      return null
+    }
+  },
+  
+  // 获取课程章节
+  async getCourseChapters(courseId) {
+    try {
+      const res = await sessionManager.requestWithSession({
+        url: `${API_ENDPOINTS.COURSES}/${courseId}/chapters`,
+        method: 'GET'
+      })
+      
+      if (res.statusCode === 200) {
+        this.state.courseChapters = res.data
+        return res.data
+      }
+      return []
+    } catch (error) {
+      handleApiError(error, 'GET_COURSE_CHAPTERS')
+      return []
+    }
+  },
+  
+  // 获取学习报告
+  async getLearningReport(courseId) {
+    try {
+      const res = await sessionManager.requestWithSession({
+        url: `${API_ENDPOINTS.REPORTS}/${courseId}`,
+        method: 'GET'
+      })
+      
+      if (res.statusCode === 200) {
+        this.state.learningReport = res.data
+        return res.data
+      }
+      return null
+    } catch (error) {
+      handleApiError(error, 'GET_LEARNING_REPORT')
+      return null
+    }
+  },
+  
+  // 获取班级成员
+  async getClassMembers(courseId) {
+    try {
+      const res = await sessionManager.requestWithSession({
+        url: `${API_ENDPOINTS.COURSES}/${courseId}/members`,
+        method: 'GET'
+      })
+      
+      if (res.statusCode === 200) {
+        this.state.classMembers = res.data
+        return res.data
+      }
+      return []
+    } catch (error) {
+      handleApiError(error, 'GET_CLASS_MEMBERS')
+      return []
+    }
+  },
+  
+  // 批量获取课程相关数据
+  async loadCourseData(courseId) {
+    try {
+      const [course, chapters, report, members] = await Promise.all([
+        this.getCourseDetail(courseId),
+        this.getCourseChapters(courseId),
+        this.getLearningReport(courseId),
+        this.getClassMembers(courseId)
+      ])
+      
+      return {
+        course,
+        chapters,
+        report,
+        members
+      }
+    } catch (error) {
+      handleApiError(error, 'LOAD_COURSE_DATA')
+      return null
     }
   },
   

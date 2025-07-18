@@ -1,0 +1,160 @@
+<header />
+<view class="container-view">
+  <!-- 顶部选择栏 -->
+  <view class="header-view">
+    <picker mode="selector" range="{{classOptions}}" range-key="name" bindchange="handleClassChange">
+      <view class="picker-item">
+        <text class="picker-text">{{selectedClass ? selectedClass.name : '选择班级'}}</text>
+        <image src="/images/arrow-down.png" class="arrow-icon"></image>
+      </view>
+    </picker>
+
+    <picker mode="selector" range="{{conversationOptions}}" range-key="name" bindchange="handleConversationChange">
+      <view class="picker-item">
+        <text class="picker-text">{{currentConversation ? processedConvOptions[currentConversation] : '选择会话'}}</text>
+        <image src="/images/arrow-down.png" class="arrow-icon"></image>
+      </view>
+    </picker>
+
+    <view class="thinking-switch">
+      <switch checked="{{thinkingMode}}" bindchange="toggleThinkingMode" color="#667eea" />
+      <text class="thinking-label">深度思考</text>
+    </view>
+  </view>
+
+  <!-- 消息列表 -->
+  <scroll-view 
+    scroll-y 
+    class="messages-scroll" 
+    scroll-into-view="{{'msg-' + (messages.length - 1)}}"
+    scroll-with-animation
+  >
+    <view 
+      wx:for="{{messages}}" 
+      wx:key="id" 
+      id="msg-{{index}}" 
+      class="message-item {{item.role}}"
+    >
+      <!-- AI消息 -->
+      <block wx:if="{{item.role === 'assistant'}}">
+        <image src="/images/ai-avatar.png" class="avatar-image"></image>
+        <view class="bubble-view">
+          <rich-text 
+            wx:if="{{item.isStreaming}}"
+            nodes="{{formatStreamingContent(item.content)}}" 
+            class="streaming-content"
+          />
+          <rich-text 
+            wx:else
+            nodes="{{item.content}}" 
+          />
+
+          <!-- 思考过程 -->
+          <view 
+            wx:if="{{item.thinkingContent}}" 
+            class="thinking-section"
+            bindtap="toggleThinking"
+            data-id="{{item.id}}"
+          >
+            <view class="thinking-header">
+              <text>思考过程</text>
+              <text>{{thinkingExpanded[item.id] ? '收起' : '展开'}}</text>
+            </view>
+            <view 
+              wx:if="{{thinkingExpanded[item.id]}}" 
+              class="thinking-content"
+            >
+              {{item.thinkingContent}}
+            </view>
+          </view>
+
+          <!-- 知识参考 -->
+          <view 
+            wx:if="{{item.sources}}" 
+            class="sources-section"
+            bindtap="toggleSources"
+            data-id="{{item.id}}"
+          >
+            <view class="sources-header">
+              <text>{{item.sources.message}}</text>
+              <text>{{sourcesExpanded[item.id] ? '收起' : '展开'}}</text>
+            </view>
+            <view 
+              wx:if="{{sourcesExpanded[item.id]}}" 
+              class="sources-content"
+            >
+              <view 
+                wx:for="{{item.sources.sources}}" 
+                wx:key="index" 
+                class="source-item"
+              >
+                <view class="source-meta">
+                  <text wx:if="{{item.knowledge_base}}">知识库: {{item.knowledge_base.name}}</text>
+                  <text wx:if="{{item.category}}">分类: {{item.category.name}}</text>
+                  <text wx:if="{{item.file}}">文件: {{item.file.name}}</text>
+                </view>
+                <view 
+                  wx:for="{{item.chunks}}" 
+                  wx:key="position" 
+                  class="chunk-item"
+                >
+                  <text class="chunk-position">片段 #{{item.position}}</text>
+                  <rich-text nodes="{{item.text}}"></rich-text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 用户消息 -->
+      <block wx:else>
+        <view class="bubble-view">
+          <text>{{item.content}}</text>
+        </view>
+        <image 
+          src="{{userInfo.avatar || '/images/default-avatar.png'}}" 
+          class="avatar-image"
+        ></image>
+      </block>
+    </view>
+    <button 
+    class="floating-add-btn" 
+    bindtap="createNewConversation" 
+    disabled="{{!selectedClass}}"
+  > <image src="/images/add.png" mode="aspectFit" class="add-icon"></image></button>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-container">
+    
+    <!-- 输入框和发送按钮 -->
+    <view class="input-area-view">
+      <textarea 
+        placeholder="输入您的问题..." 
+        auto-height 
+        maxlength="2000" 
+        bindinput="handleInput"
+        value="{{inputMessage}}"
+        disabled="{{!currentConversation}}"
+        class="input-textarea"
+      ></textarea>
+      <button 
+        type="primary" 
+        bindtap="sendMessage" 
+        disabled="{{!currentConversation || isLoading}}"
+        class="send-button"
+        >
+        <image 
+    src="/images/up-arrow.png" 
+    mode="aspectFit" 
+    class="send-icon"
+    wx:if="{{!isLoading}}"
+  ></image>
+  <!-- 加载状态仍显示 "..." -->
+  <text wx:if="{{isLoading}}">...</text>
+        </button>
+    </view>
+  </view>
+</view>
+<tab-bar currentTab="{{currentTab}}" bind:switch="switchTab" />

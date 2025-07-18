@@ -1,4 +1,4 @@
 {
-    "usingComponents": {},
+    "usingComponents": {"tab-bar": "/components/tabBar/tabBar"},
     "navigationBarTitleText": "用户登录"
 }
